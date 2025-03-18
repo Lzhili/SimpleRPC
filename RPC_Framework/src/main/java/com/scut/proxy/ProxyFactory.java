@@ -1,11 +1,15 @@
 package com.scut.proxy;
 
 import com.scut.common.Invocation;
+import com.scut.common.URL;
+import com.scut.loadbalance.LoadBalance;
 import com.scut.protocol.HttpClient;
+import com.scut.register.MapRemoteRegister;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.util.List;
 
 public class ProxyFactory {
 
@@ -18,7 +22,16 @@ public class ProxyFactory {
                         method.getName(), method.getParameterTypes(), args);
 
                 HttpClient httpClient = new HttpClient();
-                String result = httpClient.send("127.0.0.1", 8080, invocation);
+
+                //服务发现
+                List<URL> list = MapRemoteRegister.get(interfaceClass.getName());
+
+                //负载均衡
+                URL url = LoadBalance.random(list);
+
+                //服务调用
+                String result = httpClient.send(url.getHostname(), url.getPort(), invocation);
+
                 return result;
             }
         });
