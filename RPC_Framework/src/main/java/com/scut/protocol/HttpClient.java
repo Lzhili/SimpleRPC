@@ -26,6 +26,7 @@ public class HttpClient {
             oos.flush();
             oos.close();
 
+            //读取输入流中响应回来的结果
             InputStream inputStream = httpURLConnection.getInputStream();
             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
             StringBuilder result = new StringBuilder();

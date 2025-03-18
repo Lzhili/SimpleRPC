@@ -20,7 +20,7 @@ public class HttpServerHandler {
             Invocation invocation = (Invocation) new ObjectInputStream(req.getInputStream()).readObject();
             String interfaceName = invocation.getInterfaceName();
 
-            Class classImpl = LocalRegister.get(interfaceName, "2.0"); //感觉接口名称拿到对应实现类
+            Class classImpl = LocalRegister.get(interfaceName, "1.0"); //感觉接口名称拿到对应实现类
             Method method = classImpl.getMethod(invocation.getMethodName(), invocation.getParameterTypes());
             String result = (String) method.invoke(classImpl.newInstance(), invocation.getParameters());
 
